@@ -6,9 +6,9 @@ public class PlayerMovement : MonoBehaviour {
     CharacterController characterController;
     public float speed = 4f;
     public float rotationSpeed = 200f;
-    public float jumpForce = 10f;
+    public float jumpForce = 5f;
     private float verticalVelocity;
-    public float gravity = -9.8f;
+    public float gravity = -13f;
 
     void Start() {
         characterController = GetComponent<CharacterController>();
@@ -34,7 +34,7 @@ public class PlayerMovement : MonoBehaviour {
                 moveSpeed += 10f;
             }
             Vector3 movement = moveDirection * moveSpeed * Time.deltaTime;
-            movement.y = verticalVelocity * Time.deltaTime; // add vertikalVelocity pada pergerakan
+            movement.y = verticalVelocity * Time.deltaTime; //  jgn lupa add vertikalVelocity pada pergerakan
             characterController.Move(movement);
         }
     }
