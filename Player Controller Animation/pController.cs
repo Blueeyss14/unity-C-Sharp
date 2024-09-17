@@ -2,76 +2,94 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour {
+public class PlayerMovement : MonoBehaviour
+{
+    CharacterController characterController;
 
-    [SerializeField] private float moveSpeed;
     [SerializeField] private float walkSpeed;
+    [SerializeField] private float moveSpeed;
     [SerializeField] private float runSpeed;
 
-    private Vector3 moveDirection;
-    private Vector3 velocity;
-    
-    [SerializeField] private bool isGrounded;
-    [SerializeField] private float groundDistance;
-    [SerializeField] private LayerMask groundMask;
+    [SerializeField] private float jumpForce;
+    [SerializeField] private float verticalVelocity;
     [SerializeField] private float gravity;
-    [SerializeField] private float jumpHeight;
 
+    private Animator anim;
 
-    private CharacterController controller;
-
-    void Start() {
-        controller = GetComponent<CharacterController>();
+    void Start()
+    {
+        characterController = GetComponent<CharacterController>();
+        anim = GetComponentInChildren<Animator>();
     }
 
-    private void Update() {
-        Move();
-    }
+    void Update()
+    {
+        PlayerMoveFn();
+        PlayerJumpFn();
 
-    private void Move() {
-        isGrounded = Physics.CheckSphere(transform.position, groundDistance, groundMask);
-
-        if (isGrounded && velocity.y < 0) {
-            velocity.y = -2f;
+        if (Input.GetKeyDown(KeyCode.Mouse0)) { 
+            Attack();
         }
-        float moveZ = Input.GetAxis("Vertical");
+    }
 
-        moveDirection = new Vector3(0, 0, moveZ);
-        
-        if (moveDirection != Vector3.zero && !Input.GetKey(KeyCode.LeftShift)) {
-            Walk();
-        } else if (moveDirection != Vector3.zero && Input.GetKey(KeyCode.LeftShift)) {
-            Run();
-        } else if (moveDirection == Vector3.zero) {
+    void PlayerMoveFn()
+    {
+        float horizontalInput = Input.GetAxis("Horizontal");
+        float verticalInput = Input.GetAxis("Vertical");
+
+        Vector3 moveDirection = new Vector3(verticalInput, 0, verticalInput);
+        moveDirection = transform.TransformDirection(moveDirection);
+
+        if (moveDirection != Vector3.zero) {
+            if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+            {
+                Run();
+            }
+            else
+            {
+                Walk();
+            }
+        } else {
             Idle();
-         }
-
-
-        if (Input.GetKeyDown(KeyCode.Space)) {
-                Jump();
         }
-        
-        moveDirection *= moveSpeed;
-        controller.Move(moveDirection * Time.deltaTime);
 
-        velocity.y += gravity * Time.deltaTime;
-        controller.Move(velocity * Time.deltaTime);
-
+        Vector3 movement = moveDirection * moveSpeed * Time.deltaTime;
+        movement.y = verticalVelocity * Time.deltaTime;
+        characterController.Move(movement);
     }
 
     private void Idle() {
-        
+        moveSpeed = 0;
+        anim.SetFloat("Speed", 0, 0.1f, Time.deltaTime);
     }
 
     private void Walk() {
         moveSpeed = walkSpeed;
+        anim.SetFloat("Speed", 0.5f,0.1f, Time.deltaTime);
+
     }
 
     private void Run() {
         moveSpeed = runSpeed;
+        anim.SetFloat("Speed", 1, 0.1f, Time.deltaTime);
     }
 
-    private void Jump() {
-        velocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity);
+    void PlayerJumpFn()
+    {
+        if (characterController.isGrounded)
+        {
+            verticalVelocity = 0;
+
+            if (Input.GetKey(KeyCode.Space)) {
+            verticalVelocity = jumpForce;
+            }
+        }
+        verticalVelocity += gravity * Time.deltaTime;
+        Vector3 jumpVector = new Vector3(0, verticalVelocity, 0);
+        characterController.Move(jumpVector * Time.deltaTime);
+    }
+
+    private 5 Attack() {
+        anim.SetTrigger("Attack");
     } 
 }
