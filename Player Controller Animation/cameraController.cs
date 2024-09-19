@@ -37,7 +37,7 @@ public class PlayerMovement : MonoBehaviour
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
 
-        Vector3 moveDirection = new Vector3(verticalInput, 0, verticalInput);
+        Vector3 moveDirection = new Vector3(0, 0, verticalInput);
         moveDirection = transform.TransformDirection(moveDirection);
 
         if (moveDirection != Vector3.zero) {
