@@ -2,13 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerCameraController : MonoBehaviour
+public class cameraController : MonoBehaviour
 {
     [SerializeField] private float mouseSensivity;
-
     private Transform parent;
-
-
     void Start()
     {
         parent = transform.parent;
