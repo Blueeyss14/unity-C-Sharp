@@ -1,26 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.XR;
 
 public class PlayerController : MonoBehaviour
 {
     CharacterController characterController;
-
-    [SerializeField] private float moveValue;
+    [SerializeField] private float move;
     [SerializeField] private float walk;
     [SerializeField] private float run;
 
     [SerializeField] private float jumpValue;
-    [SerializeField] private float jumpVelocity;
+    [SerializeField] private float velocity;
     [SerializeField] private float gravity;
 
-    Animator playerAnime;
+    private Animator playerAnimator;
+
+
 
     void Start()
     {
         characterController = GetComponent<CharacterController>();
-        playerAnime = GetComponentInChildren<Animator>();
+        playerAnimator = GetComponentInChildren<Animator>();
     }
 
     void Update()
@@ -28,69 +28,71 @@ public class PlayerController : MonoBehaviour
         PlayerMovement();
         PlayerJump();
 
-        if (Input.GetKey(KeyCode.Mouse0)) { 
-            PlayerAttack();
+        if (Input.GetKey(KeyCode.Mouse0)) {
+            PlayerAttck();
         }
     }
 
     void PlayerMovement() {
         float verticalInput = Input.GetAxis("Vertical");
-        Vector3 moveDirection = new Vector3 (0, 0, verticalInput);
+        Vector3 moveDirection = new Vector3(0,0,verticalInput);
         moveDirection = transform.TransformDirection(moveDirection);
 
-        if (moveDirection != Vector3.zero) {
-            bool LSpeed = Input.GetKey(KeyCode.LeftShift);
-            bool RSpeed = Input.GetKey(KeyCode.RightShift);
+        if (moveDirection != Vector3.zero)
+        {
+            bool LeftRun = Input.GetKey(KeyCode.LeftShift);
+            bool RightRun = Input.GetKey(KeyCode.LeftShift);
 
-            if (LSpeed || RSpeed)
+            if (LeftRun || RightRun)
             {
                 PlayerRun();
             }
-            else { 
+            else
+            {
                 PlayerWalk();
             }
-        } else
-        {
+        }
+        else { 
             PlayerIdle();
         }
 
-        Vector3 movement = moveDirection * moveValue * Time.deltaTime;
-        movement.y = jumpVelocity * Time.deltaTime;
+        Vector3 movement = moveDirection * move * Time.deltaTime;
+        movement.y = velocity * Time.deltaTime;
         characterController.Move(movement);
-
     }
 
     private void PlayerIdle() { 
-        moveValue = 0;
-        playerAnime.SetFloat("Movement", 0, 0.1f, Time.deltaTime);
+        move = 0;
+        playerAnimator.SetFloat("Speed", 0, 0.1f, Time.deltaTime);
     }
     private void PlayerWalk()
     {
-        moveValue = walk;
-        playerAnime.SetFloat("Movement", 0.5f, 0.1f, Time.deltaTime);
+        move = walk;
+        playerAnimator.SetFloat("Speed", 0.5f, 0.1f, Time.deltaTime);
     }
     private void PlayerRun()
     {
-        moveValue = run;
-        playerAnime.SetFloat("Movement", 1, 0.1f, Time.deltaTime);
+        move = run;
+        playerAnimator.SetFloat("Speed", 1, 0.1f, Time.deltaTime);
     }
 
     void PlayerJump() {
-        if (characterController.isGrounded) {
-            jumpVelocity = 0;
-            bool playerJump = Input.GetKey(KeyCode.Space);
+        if (characterController.isGrounded) { 
+            velocity = 0;
 
-            if (playerJump) { 
-                jumpVelocity = jumpValue;
+            bool jumpSpace = Input.GetKey(KeyCode.Space);
+            if (jumpSpace)
+            {
+                velocity = jumpValue;
             }
         }
 
-        jumpVelocity += gravity * Time.deltaTime;
-        Vector3 jump = new Vector3(0,jumpVelocity,0);
+        velocity += gravity * Time.deltaTime;
+        Vector3 jump = new Vector3(0,velocity,0);
         characterController.Move(jump * Time.deltaTime);
     }
 
-    void PlayerAttack() {
-        playerAnime.SetTrigger("Attack");
+    void PlayerAttck() {
+        playerAnimator.SetTrigger("Attack");
     }
 }
