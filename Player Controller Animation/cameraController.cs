@@ -1,24 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    private Transform parent;
-    [SerializeField] private float mouseSensivity;
+
+    Transform parent;
+
+    [SerializeField] private float mouseSensitivity;
+
     void Start()
     {
-        parent = transform.parent;
+        parent = transform.parent; 
         Cursor.lockState = CursorLockMode.Locked;
     }
 
     void Update()
     {
-        CameraRotate();
+        CameraMove();
     }
 
-    void CameraRotate() {
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensivity * Time.deltaTime;
+    private void CameraMove() {
+        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
         parent.Rotate(Vector3.up, mouseX);
     }
 }
