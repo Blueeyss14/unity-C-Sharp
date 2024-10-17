@@ -4,83 +4,98 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    CharacterController characterController;
-    [SerializeField] private float moveSpeed;
-    [SerializeField] private float walkSpeed;
-    [SerializeField] private float runSpeed;
 
-    //Jump
-    [SerializeField] private float jumpForce;
-    [SerializeField] private float velocity;
+    CharacterController characterController;
+
+    [SerializeField] private float moveSpeed;
+    [SerializeField] private float walk;
+    [SerializeField] private float run;
+
+    [SerializeField] private float jumpValue;
+    [SerializeField] private float jumpVelocity;
     [SerializeField] private float gravity;
+
+    Animator animeMove;
 
 
     void Start()
     {
         characterController = GetComponent<CharacterController>();
+        animeMove = GetComponentInChildren<Animator>();
     }
 
     void Update()
     {
-        PlayerMove();
-        PlayerJump();
+        PlayerMovementFn();
+        PlayerJumpFn();
+        PlayerAttackFn();
     }
 
-    void PlayerMove() 
-    {
-        //float horizontalInput = Input.GetAxis("Horizontal");
-        float verticalInput = Input.GetAxis("Vertical");
-        Vector3 moveDirection = new Vector3(0, 0, verticalInput);
+    void PlayerMovementFn() {
+        float verticalAxis = Input.GetAxis("Vertical");
+        Vector3 moveDirection = new Vector3 (0, 0, verticalAxis);
         moveDirection = transform.TransformDirection(moveDirection);
 
-        if (moveDirection != Vector3.zero)
+        if (Vector3.zero != moveDirection)
         {
+
             if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
             {
-                Run();
+                PlayerRunFn();
             }
             else
             {
-                Walk();
+                PlayerWalkFn();
             }
         }
-        else {
-            Idle();
+        else { 
+            PlayerIdleFn();
         }
 
-        Vector3 movement = moveDirection * moveSpeed * Time.deltaTime;
-        movement.y = velocity * Time.deltaTime;
-        characterController.Move(movement);
+        Vector3 move = moveDirection * moveSpeed * Time.deltaTime;
+        move.y = jumpVelocity * Time.deltaTime;
+        characterController.Move(move);
     }
 
-    private void Idle() { 
+    private void PlayerIdleFn() {
         moveSpeed = 0;
+        animeMove.SetFloat("Move Speed" ,0 ,0.1f , Time.deltaTime);
+    }
+    private void PlayerWalkFn()
+    {
+        moveSpeed = walk;
+        animeMove.SetFloat("Move Speed", 0.5f, 0.1f, Time.deltaTime);
+
+    }
+    private void PlayerRunFn()
+    {
+        moveSpeed = run;
+        animeMove.SetFloat("Move Speed", 1, 0.1f, Time.deltaTime);
     }
 
-    private void Walk()
-    {
-        moveSpeed = walkSpeed;
-    }
-    private void Run()
-    {
-        moveSpeed = runSpeed;
-    }
+    void PlayerJumpFn() {
+        if (characterController.isGrounded) {
+            jumpVelocity = 0;
 
-    void PlayerJump() 
-    {
-        if (characterController.isGrounded)
-        { 
-            velocity = 0;
-
-            if (Input.GetKey(KeyCode.Space)) 
-            { 
-                velocity = jumpForce;
+            if (Input.GetKey(KeyCode.Space)) {
+                jumpVelocity = jumpValue;
             }
         }
-        velocity += gravity * Time.deltaTime;
-        Vector3 jump = new Vector3(0, velocity, 0);
+        jumpVelocity += gravity * Time.deltaTime;
+        Vector3 jump = new Vector3(0,jumpVelocity,0);
         characterController.Move(jump * Time.deltaTime);
-
     }
 
+    void PlayerAttackFn() {
+
+        if ( Input.GetKey(KeyCode.Mouse0))
+        {
+            animeMove.SetTrigger("Attack");
+        }
+
+        if (Input.GetKey(KeyCode.Q))
+        {
+            animeMove.SetTrigger("AttackQ");
+        }
+    }
 }

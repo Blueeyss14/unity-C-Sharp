@@ -4,22 +4,23 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    [SerializeField] private float mouseSensivity;
-    private Transform parent;
+    [SerializeField] private float mouseSensitivity;
 
+    Transform cameraParent;
     void Start()
     {
-        parent = transform.parent;
+        cameraParent = transform.parent;
         Cursor.lockState = CursorLockMode.Locked;
     }
 
     void Update()
     {
-        CameraRotate();
+        CameraFn();
+        
     }
 
-    void CameraRotate() {
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensivity * Time.deltaTime;
-        parent.Rotate(Vector3.up, mouseX);
+    void CameraFn() {
+        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
+        transform.Rotate(Vector3.up, mouseX);
     }
 }
