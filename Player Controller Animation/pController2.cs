@@ -86,16 +86,5 @@ public class PlayerController : MonoBehaviour
         characterController.Move(jump * Time.deltaTime);
     }
 
-    void PlayerAttackFn() {
-
-        if ( Input.GetKey(KeyCode.Mouse0))
-        {
-            animeMove.SetTrigger("Attack");
-        }
-
-        if (Input.GetKey(KeyCode.Q))
-        {
-            animeMove.SetTrigger("AttackQ");
-        }
-    }
+    
 }
