@@ -95,5 +95,10 @@ public class PlayerController : MonoBehaviour
             playerAnime.SetTrigger("Attack");
         }
 
+        if (Input.GetKey(KeyCode.Q))
+        {
+            playerAnime.SetTrigger("AttackQ");
+        }
+
     }
 }
