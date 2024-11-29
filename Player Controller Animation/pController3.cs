@@ -2,103 +2,83 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
-{
+public class PlayerController : MonoBehaviour {
 
     CharacterController characterController;
-    [SerializeField] private float movePl;
-    [SerializeField] private float walk;
-    [SerializeField] private float run;
+    Animator anime;
 
-    [SerializeField] private float jumpForce;
+    [SerializeField] private float moveSpeed;
+    [SerializeField] private float walkSpeed;
+    [SerializeField] private float runSpeed;
+
+    [SerializeField] private float jumpValue;
     [SerializeField] private float jumpVelocity;
     [SerializeField] private float gravity;
 
-    Animator playerAnime;
 
-
-    void Start()
-    {
+    void Start() {
         characterController = GetComponent<CharacterController>();
-        playerAnime = GetComponentInChildren<Animator>();
+        anime = GetComponentInChildren<Animator>();
     }
 
-    void Update()
-    {
-        PlayerMoveFn();
-        JumpMelonchad();
-        PlayerAttackFn();
+    void Update() {
+        PlayerMove();
+        PlayerJump();
+        PlayerAttack();
     }
 
-    void PlayerMoveFn() {
+    void PlayerMove() {
         float verticalInput = Input.GetAxis("Vertical");
         Vector3 moveDirection = new Vector3(0,0,verticalInput);
         moveDirection = transform.TransformDirection(moveDirection);
 
-        if (Vector3.zero != moveDirection)
-        {
-            bool lShift = Input.GetKey(KeyCode.LeftShift);
-            bool rShift = Input.GetKey(KeyCode.RightShift);
-
-            if (lShift || rShift)
-            {
-                Run();
+        if (Vector3.zero != moveDirection) {
+            if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) {
+                PlayerRun();
+            } else {
+                PlayerWalk();
             }
-            else
-            {
-                Walk();
-            }
+        } else {
+            PlayerIdle();
         }
-        else {
-            Idle();
-        }
-
-        Vector3 moveV = moveDirection * movePl * Time.deltaTime;
-        moveV.y = jumpVelocity * Time.deltaTime;
-        characterController.Move(moveV);
+        Vector3 finalMove = moveDirection * moveSpeed * Time.deltaTime;
+        finalMove.y = jumpVelocity * Time.deltaTime;
+        characterController.Move(finalMove);
 
     }
 
-    private void Idle() { 
-        movePl = 0;
-        playerAnime.SetFloat("Player Animation", 0, 0.1f, Time.deltaTime);
+    private void PlayerIdle() {
+        moveSpeed = 0;
+        anime.SetFloat("Player Animation", 0,0.1f,Time.deltaTime);
     }
-    private void Walk()
-    {
-        movePl = walk;
-        playerAnime.SetFloat("Player Animation", 0.5f, 0.1f, Time.deltaTime);
+    private void PlayerWalk() {
+        moveSpeed = walkSpeed;
+        anime.SetFloat("Player Animation", 0.5f,0.1f,Time.deltaTime);
     }
-    private void Run()
-    {
-        movePl = run;
-        playerAnime.SetFloat("Player Animation", 1, 0.1f, Time.deltaTime);
+    private void PlayerRun() {
+        moveSpeed = runSpeed;
+        anime.SetFloat("Player Animation", 1,0.1f,Time.deltaTime);
     }
 
-    void JumpMelonchad() {
-        if (characterController.isGrounded) { 
+    void PlayerJump() {
+        if (characterController.isGrounded) {
             jumpVelocity = 0;
-
-            bool jumpSpace = Input.GetKey(KeyCode.Space);
-            if (jumpSpace) {
-                jumpVelocity = jumpForce;
+            if (Input.GetKey(KeyCode.Space)) {
+                jumpVelocity = jumpValue;
             }
         }
-
         jumpVelocity += gravity * Time.deltaTime;
-        Vector3 jump = new Vector3(0,jumpVelocity,0);
-        characterController.Move(jump * Time.deltaTime);
+        Vector3 jumpMove = new Vector3(0,jumpVelocity,0);
+        characterController.Move(jumpMove * Time.deltaTime);
     }
 
-    void PlayerAttackFn() {
-
-        if (Input.GetKey(KeyCode.Mouse0)) { 
-            playerAnime.SetTrigger("Attack");
+    void PlayerAttack() {
+        if (Input.GetKey(KeyCode.Mouse0)) {
+            anime.SetTrigger("Attack");
         }
 
-        if (Input.GetKey(KeyCode.Q))
-        {
-            playerAnime.SetTrigger("AttackQ");
+        if (Input.GetKeyUp(KeyCode.Q)) {
+            anime.SetTrigger("AttackQ");
         }
-
     }
 }
