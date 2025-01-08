@@ -22,12 +22,12 @@ public class PlayerController : MonoBehaviour {
     }
 
     void Update() {
-        PlayerMove();
+        YukataGirlMoves();
         PlayerJump();
         PlayerAttack();
     }
 
-    void PlayerMove() {
+    void YukataGirlMoves() {
         float verticalInput = Input.GetAxis("Vertical");
         Vector3 moveDirection = new Vector3(0,0,verticalInput);
         moveDirection = transform.TransformDirection(moveDirection);
