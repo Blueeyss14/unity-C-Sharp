@@ -7,12 +7,17 @@ public class Player : MonoBehaviour
 {
     CharacterController playerController;
     Animator playerAnime;
+
+    [Header("Movement")]
     [SerializeField] private float moveSpeed;
     [SerializeField] private float walkSpeed;
     [SerializeField] private float runSpeed;
+
+    [Header("Angle Velocity")]
     [SerializeField] private float calmTime;
     [SerializeField] private float calmVelocity;
 
+    [Header("Jump")]
     [SerializeField] private float jumpVelocity;
     [SerializeField] private float gravity;
     [SerializeField] private float jumpValue;
@@ -126,6 +131,4 @@ public class Player : MonoBehaviour
         playerAnime.SetBool("isGrounded", isGrounded);
         playerAnime.SetBool("isFallin", isFallin);
     }
-
-
 }
