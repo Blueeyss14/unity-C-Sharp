@@ -91,8 +91,7 @@ public class Player : MonoBehaviour
     {
         if (playerController.isGrounded)
         {
-            if (!isGrounded)
-            {
+
                 isGrounded = true;
                 isJumping = false;
                 isFallin = false;
@@ -100,7 +99,6 @@ public class Player : MonoBehaviour
                 playerAnime.SetBool("isJumping", isJumping);
                 playerAnime.SetBool("isGrounded", isGrounded);
                 playerAnime.SetBool("isFallin", isFallin);
-            }
 
             jumpVelocity = 0;
 
@@ -108,7 +106,7 @@ public class Player : MonoBehaviour
             {
                 isJumping = true;
                 isGrounded = false;
-                isFallin = false;
+                isFallin = true;
 
                 playerAnime.SetBool("isJumping", isJumping);
                 playerAnime.SetBool("isGrounded", isGrounded);
@@ -119,26 +117,14 @@ public class Player : MonoBehaviour
         }
         else
         {
-            isGrounded = false;
-            playerAnime.SetBool("isGrounded", false);
+                isGrounded = false;
+                isJumping = false;
+                isFallin = true;
 
-            if (jumpVelocity > 0)
-            {
-                isJumping = true;
-                isFallin = false;
-            }
-            else
-            {
-                if (!isFallin)
-                {
-                    isFallin = true;
-                    isJumping = false;
-
-                    playerAnime.SetBool("isFallin", true);
-                    playerAnime.SetBool("isJumping", false);
-                }
-            }
-        }
+                playerAnime.SetBool("isJumping", isJumping);
+            playerAnime.SetBool("isGrounded", isGrounded);
+            playerAnime.SetBool("isFallin", isFallin);
+    }
 
         jumpVelocity += gravity * Time.deltaTime;
         Vector3 jump = new Vector3(0, jumpVelocity, 0);
