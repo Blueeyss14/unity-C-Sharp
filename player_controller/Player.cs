@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -38,6 +39,7 @@ public class Player : MonoBehaviour
         float verticalMove = Input.GetAxis("Vertical");
 
         Vector3 moveDirection = new Vector3(horizontalMove, 0f,verticalMove);
+        moveDirection.y = jumpVelocity * Time.deltaTime;
 
         if (moveDirection.magnitude >= 0.1f)
         {
@@ -91,44 +93,38 @@ public class Player : MonoBehaviour
     {
         if (playerController.isGrounded)
         {
-
-                isGrounded = true;
-                isJumping = false;
-                isFallin = false;
-
-                playerAnime.SetBool("isJumping", isJumping);
-                playerAnime.SetBool("isGrounded", isGrounded);
-                playerAnime.SetBool("isFallin", isFallin);
-
+            isGrounded = true;
+            isJumping = false;
+            isFallin = false;
             jumpVelocity = 0;
 
-            if (Input.GetKeyDown(KeyCode.Space))
+            bool isPlayingJumpAnim = playerAnime.GetCurrentAnimatorStateInfo(0).IsName("Jumping");
+            bool isPlayingFallAnim = playerAnime.GetCurrentAnimatorStateInfo(0).IsName("Fallin");
+
+            if (Input.GetKeyDown(KeyCode.Space) && !isPlayingJumpAnim && !isPlayingFallAnim)
             {
+                jumpVelocity = jumpValue;
                 isJumping = true;
                 isGrounded = false;
-                isFallin = true;
-
-                playerAnime.SetBool("isJumping", isJumping);
-                playerAnime.SetBool("isGrounded", isGrounded);
-                playerAnime.SetBool("isFallin", isFallin);
-
-                jumpVelocity = jumpValue;
+                playerAnime.SetBool("isJumping", true);
             }
         }
         else
         {
-                isGrounded = false;
-                isJumping = false;
+            if (jumpVelocity < 0 && !isFallin)
+            {
                 isFallin = true;
-
-                playerAnime.SetBool("isJumping", isJumping);
-            playerAnime.SetBool("isGrounded", isGrounded);
-            playerAnime.SetBool("isFallin", isFallin);
-    }
+                playerAnime.SetBool ("isFallin", true);
+            }
+        }
 
         jumpVelocity += gravity * Time.deltaTime;
         Vector3 jump = new Vector3(0, jumpVelocity, 0);
         playerController.Move(jump * Time.deltaTime);
+
+        playerAnime.SetBool("isJumping", isJumping);
+        playerAnime.SetBool("isGrounded", isGrounded);
+        playerAnime.SetBool("isFallin", isFallin);
     }
 
 
