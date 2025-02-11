@@ -12,6 +12,14 @@ public class Player : MonoBehaviour
     [SerializeField] private float calmTime;
     [SerializeField] private float calmVelocity;
 
+    [SerializeField] private float jumpVelocity;
+    [SerializeField] private float gravity;
+    [SerializeField] private float jumpValue;
+
+    private bool isJumping;
+    private bool isGrounded;
+    private bool isFallin;
+
 
     void Start()
     {
@@ -22,6 +30,7 @@ public class Player : MonoBehaviour
     void Update()
     {
         PlayerMoveFn();
+        PlayerJump();
     }
 
     private void PlayerMoveFn() {
@@ -68,7 +77,7 @@ public class Player : MonoBehaviour
     private void PlayerWalk()
     {
         playerAnime.SetFloat("Move", 0.5f, 0.1f, Time.deltaTime);
-        playerAnime.SetFloat("speedMultiplier", 0.7f, 0.5f, Time.deltaTime);
+        playerAnime.SetFloat("speedMultiplier", 1, 0.5f, Time.deltaTime);
         moveSpeed = walkSpeed;
     }
 
@@ -77,4 +86,64 @@ public class Player : MonoBehaviour
         playerAnime.SetFloat("speedMultiplier", 1.2f, 0.5f, Time.deltaTime);
         moveSpeed = runSpeed;
     }
+
+    private void PlayerJump()
+    {
+        if (playerController.isGrounded)
+        {
+            if (!isGrounded)
+            {
+                isGrounded = true;
+                isJumping = false;
+                isFallin = false;
+
+                playerAnime.SetBool("isJumping", isJumping);
+                playerAnime.SetBool("isGrounded", isGrounded);
+                playerAnime.SetBool("isFallin", isFallin);
+            }
+
+            jumpVelocity = 0;
+
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                isJumping = true;
+                isGrounded = false;
+                isFallin = false;
+
+                playerAnime.SetBool("isJumping", isJumping);
+                playerAnime.SetBool("isGrounded", isGrounded);
+                playerAnime.SetBool("isFallin", isFallin);
+
+                jumpVelocity = jumpValue;
+            }
+        }
+        else
+        {
+            isGrounded = false;
+            playerAnime.SetBool("isGrounded", false);
+
+            if (jumpVelocity > 0)
+            {
+                isJumping = true;
+                isFallin = false;
+            }
+            else
+            {
+                if (!isFallin)
+                {
+                    isFallin = true;
+                    isJumping = false;
+
+                    playerAnime.SetBool("isFallin", true);
+                    playerAnime.SetBool("isJumping", false);
+                }
+            }
+        }
+
+        jumpVelocity += gravity * Time.deltaTime;
+        Vector3 jump = new Vector3(0, jumpVelocity, 0);
+        playerController.Move(jump * Time.deltaTime);
+    }
+
+
 }
