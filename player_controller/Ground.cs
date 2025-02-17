@@ -5,6 +5,7 @@ using UnityEngine;
 public class KiaraNova : MonoBehaviour
 {
     CharacterController playerController;
+    Animator anime;
 
     [Header("Grounded")]
     [SerializeField] private float jumpVelocity;
@@ -15,6 +16,7 @@ public class KiaraNova : MonoBehaviour
     void Start()
     {
         playerController = GetComponent<CharacterController>();
+        anime = GetComponent<Animator>(); // Inisialisasi Animator
     }
 
     void Update()
@@ -36,5 +38,26 @@ public class KiaraNova : MonoBehaviour
         Vector3 origin = transform.position;
         float distance = 0.2f;
         return Physics.Raycast(origin, Vector3.down, distance, groundLayer);
+    }
+
+    IEnumerator PlayAnimation()
+    {
+        yield return new WaitForSeconds(20.1f); // Menunggu 2 detik sebelum animasi mulai
+
+        anime.Play("TREE_SCENE", 0, 0f); // Mulai dari frame 0
+        anime.speed = 1; // Pastikan animasi berjalan normal
+
+        yield return new WaitForSeconds(1f); // Tunggu sebentar agar animasi mulai
+
+        anime.Play("TREE_SCENE", 0, 30f / anime.GetCurrentAnimatorStateInfo(0).length); // Lompat ke frame 30
+
+        yield return new WaitForSeconds(5f); // Menunggu 5 detik
+
+        anime.Play("TREE_SCENE", 0, 31f / anime.GetCurrentAnimatorStateInfo(0).length);
+    }
+
+    void playAnimation()
+    {
+        StartCoroutine(PlayAnimation());
     }
 }
