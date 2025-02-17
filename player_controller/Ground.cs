@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class KiaraNova : MonoBehaviour
@@ -16,7 +14,9 @@ public class KiaraNova : MonoBehaviour
     void Start()
     {
         playerController = GetComponent<CharacterController>();
-        anime = GetComponent<Animator>(); // Inisialisasi Animator
+        anime = GetComponent<Animator>(); 
+
+        Invoke("TriggerAnimation", 20f); 
     }
 
     void Update()
@@ -40,24 +40,12 @@ public class KiaraNova : MonoBehaviour
         return Physics.Raycast(origin, Vector3.down, distance, groundLayer);
     }
 
-    IEnumerator PlayAnimation()
+
+    void TriggerAnimation()
     {
-        yield return new WaitForSeconds(20.1f); // Menunggu 2 detik sebelum animasi mulai
-
-        anime.Play("TREE_SCENE", 0, 0f); // Mulai dari frame 0
-        anime.speed = 1; // Pastikan animasi berjalan normal
-
-        yield return new WaitForSeconds(1f); // Tunggu sebentar agar animasi mulai
-
-        anime.Play("TREE_SCENE", 0, 30f / anime.GetCurrentAnimatorStateInfo(0).length); // Lompat ke frame 30
-
-        yield return new WaitForSeconds(5f); // Menunggu 5 detik
-
-        anime.Play("TREE_SCENE", 0, 31f / anime.GetCurrentAnimatorStateInfo(0).length);
-    }
-
-    void playAnimation()
-    {
-        StartCoroutine(PlayAnimation());
+        if (anime != null)
+        {
+            anime.SetTrigger("treeScene"); 
+        }
     }
 }
