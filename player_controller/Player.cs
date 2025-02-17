@@ -12,14 +12,13 @@ public class KiaraNova : MonoBehaviour
     [SerializeField] private float jumpValue;
     [SerializeField] private LayerMask groundLayer;
 
-    private float waitTime = 10f;
 
     void Start()
     {
         playerController = GetComponent<CharacterController>();
         anime = GetComponent<Animator>();
 
-        StartCoroutine(WaitAnimationFor());
+        StartCoroutine(PlaySegmentedAnimation());
     }
 
     void Update()
@@ -43,9 +42,26 @@ public class KiaraNova : MonoBehaviour
         return Physics.Raycast(origin, Vector3.down, distance, groundLayer);
     }
 
+    private IEnumerator PlaySegmentedAnimation()
+    {
+        anime.Play("TREE_SCENE", 0, 0f);
+        AnimatorStateInfo stateInfo = anime.GetCurrentAnimatorStateInfo(0);
+        float firstScene = (1f / 176f) * stateInfo.length;
+        yield return new WaitForSeconds(firstScene);
+        anime.speed = 0; // Stop in 1
 
-    private IEnumerator WaitAnimationFor() 
-    { yield return new WaitForSeconds(waitTime);
-        anime.SetTrigger("StartAnimation");
+        yield return new WaitForSeconds(2);
+
+        anime.Play("TREE_SCENE", 0, 2f / 176f);
+        anime.speed = 1; // back to normal speed
+        AnimatorStateInfo stateInfo2 = anime.GetCurrentAnimatorStateInfo(0);
+        float secondScene = (17f / 176f) * stateInfo2.length;
+        yield return new WaitForSeconds(secondScene);
+        anime.speed = 0; // Stop in 17
+
+        yield return new WaitForSeconds(5);
+
+        anime.Play("TREE_SCENE", 0, 18f / 176f);
+        anime.speed = 1;
     }
 }
