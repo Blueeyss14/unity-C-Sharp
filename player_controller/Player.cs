@@ -44,16 +44,20 @@ public class KiaraNova : MonoBehaviour
 
     private IEnumerator PlaySegmentedAnimation()
     {
+        // frame 0 to 1
         anime.Play("TREE_SCENE", 0, 0f);
+        yield return null;
         AnimatorStateInfo stateInfo = anime.GetCurrentAnimatorStateInfo(0);
         float firstScene = (1f / 176f) * stateInfo.length;
         yield return new WaitForSeconds(firstScene);
-        anime.speed = 0; // Stop in 1
+        anime.speed = 0; // Stop di frame 1
 
         yield return new WaitForSeconds(2);
 
+        // frame 2 to 17
         anime.Play("TREE_SCENE", 0, 2f / 176f);
-        anime.speed = 1; // back to normal speed
+        anime.speed = 1; // back to normal
+        yield return null; // to null (wajib ini mah)
         AnimatorStateInfo stateInfo2 = anime.GetCurrentAnimatorStateInfo(0);
         float secondScene = (17f / 176f) * stateInfo2.length;
         yield return new WaitForSeconds(secondScene);
@@ -61,7 +65,20 @@ public class KiaraNova : MonoBehaviour
 
         yield return new WaitForSeconds(5);
 
+        // frame 18 to 40
         anime.Play("TREE_SCENE", 0, 18f / 176f);
-        anime.speed = 1;
+        anime.speed = 1; 
+        yield return null;
+        AnimatorStateInfo stateInfo3 = anime.GetCurrentAnimatorStateInfo(0);
+        float thirdScene = (40f / 176f) * stateInfo3.length;
+        yield return new WaitForSeconds(thirdScene);
+        anime.speed = 0; // Stop in 40
+
+        yield return new WaitForSeconds(3);
+
+        anime.Play("TREE_SCENE", 0, 40f / 176f);
+        anime.speed = 1; // back to normal
     }
+
+
 }
