@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class KiaraNova : MonoBehaviour
@@ -11,12 +12,14 @@ public class KiaraNova : MonoBehaviour
     [SerializeField] private float jumpValue;
     [SerializeField] private LayerMask groundLayer;
 
+    private float waitTime = 10f;
+
     void Start()
     {
         playerController = GetComponent<CharacterController>();
-        anime = GetComponent<Animator>(); 
+        anime = GetComponent<Animator>();
 
-        Invoke("TriggerAnimation", 20f); 
+        StartCoroutine(WaitAnimationFor());
     }
 
     void Update()
@@ -41,11 +44,8 @@ public class KiaraNova : MonoBehaviour
     }
 
 
-    void TriggerAnimation()
-    {
-        if (anime != null)
-        {
-            anime.SetTrigger("treeScene"); 
-        }
+    private IEnumerator WaitAnimationFor() 
+    { yield return new WaitForSeconds(waitTime);
+        anime.SetTrigger("StartAnimation");
     }
 }
