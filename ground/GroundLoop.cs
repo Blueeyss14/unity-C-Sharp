@@ -1,20 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class GgroudLoop : MonoBehaviour
+public class LoopingPlane : MonoBehaviour
 {
     public Transform player;
-    public float groundLength = 10f;
-    private int groundIndex = 0;
+    private float planeLength;
+
+    void Start()
+    {
+        planeLength = GetComponent<Renderer>().bounds.size.z;
+    }
 
     void Update()
     {
-        if (player.position.z > transform.position.z + groundLength / 2)
+        if (player.position.z > transform.position.z + (planeLength / 2))
         {
-            groundIndex++;
-            transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z + planeLength);
-            Debug.Log("Loop: " + groundIndex);
+            transform.position += Vector3.forward * planeLength;
         }
     }
 }
