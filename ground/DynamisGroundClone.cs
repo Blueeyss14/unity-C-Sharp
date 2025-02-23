@@ -1,33 +1,55 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class LoopingPlane : MonoBehaviour
 {
     public GameObject planePrefab;
     public Transform player;
     private float planeLength;
-    private bool isClone = false;
+
+    private static HashSet<int> spawnedIndexes = new HashSet<int>(); // save index to plane position
 
     void Start()
     {
         planeLength = GetComponent<Renderer>().bounds.size.z;
+        int index = Mathf.RoundToInt(transform.position.z / planeLength);
+
+        // add index to first list
+        spawnedIndexes.Add(index);
     }
 
     void Update()
     {
-        if (!isClone && player.position.z > transform.position.z)
+        int playerIndex = Mathf.RoundToInt(player.position.z / planeLength);
+        int currentIndex = Mathf.RoundToInt(transform.position.z / planeLength);
+
+        // next
+        if (!spawnedIndexes.Contains(currentIndex + 1) && playerIndex > currentIndex)
         {
-            ClonePlane();
-            isClone = true;
+            SpawnPlane(currentIndex + 1);
+        }
+
+        // prev
+        if (!spawnedIndexes.Contains(currentIndex - 1) && playerIndex < currentIndex)
+        {
+            SpawnPlane(currentIndex - 1);
         }
     }
 
-    void ClonePlane()
+    void SpawnPlane(int newIndex)
     {
-        Vector3 newPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z + planeLength);
+        // isClone?
+        if (spawnedIndexes.Contains(newIndex)) return;
+
+        Vector3 newPosition = new Vector3(transform.position.x, transform.position.y, newIndex * planeLength);
         GameObject newPlane = Instantiate(planePrefab, newPosition, Quaternion.identity);
 
-        newPlane.AddComponent<LoopingPlane>();
-        newPlane.GetComponent<LoopingPlane>().player = player;
-        newPlane.GetComponent<LoopingPlane>().planePrefab = planePrefab;
+        // add index to list
+        spawnedIndexes.Add(newIndex);
+
+        // add new script to the planeee
+        LoopingPlane script = newPlane.AddComponent<LoopingPlane>();
+        script.planePrefab = planePrefab;
+        script.player = player;
     }
 }
