@@ -12,9 +12,16 @@ public class LoopingPlane : MonoBehaviour
 
     void Update()
     {
+        // ke depan
         if (player.position.z > transform.position.z + (planeLength / 2))
         {
             transform.position += Vector3.forward * planeLength;
+        }
+
+        //ke belakang
+        if (player.position.z < transform.position.z - (planeLength / 2))
+        {
+            transform.position -= Vector3.forward * planeLength;
         }
     }
 }
