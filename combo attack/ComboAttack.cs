@@ -61,7 +61,29 @@ public class PlayerAttack : MonoBehaviour
     public void HandleCombo() { 
         isClicked = false;
 
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Attack1") && comboIndex == 1) {
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Attack1") && comboIndex == 1)
+        {
+            animator.SetInteger("ComboIndex", 0);
+            isClicked = true;
+            comboIndex = 0;
+        }
+        else if (animator.GetCurrentAnimatorStateInfo(0).IsName("Attack1") && comboIndex >= 2)
+        {
+            animator.SetInteger("ComboIndex", 2);
+            isClicked = true;
+        }
+        else if (animator.GetCurrentAnimatorStateInfo(0).IsName("Attack2") && comboIndex == 2)
+        {
+            animator.SetInteger("ComboIndex", 0);
+            isClicked = true;
+            comboIndex = 0;
+        }
+        else if (animator.GetCurrentAnimatorStateInfo(0).IsName("Attack2") && comboIndex >= 3)
+        {
+            animator.SetInteger("ComboIndex", 3);
+            isClicked = true;
+        }
+        else {
             animator.SetInteger("ComboIndex", 0);
             isClicked = true;
             comboIndex = 0;
