@@ -57,7 +57,7 @@ public class PlayerAttack : MonoBehaviour
         //    animator.Play("Attack3");
         //}
     }
-
+/*
     public void HandleCombo() { 
         isClicked = false;
 
@@ -87,6 +87,30 @@ public class PlayerAttack : MonoBehaviour
             animator.SetInteger("ComboIndex", 0);
             isClicked = true;
             comboIndex = 0;
+        }
+    }
+    */
+
+    public void HandleCombo()
+    {
+        isClicked = false;
+
+        if (comboIndex == 2)
+        {
+            animator.SetInteger("ComboIndex", 2);
+            isClicked = true;
+        }
+        else if (comboIndex > 2)
+        {
+            animator.SetInteger("ComboIndex", 3);
+            isClicked = true;
+            comboIndex = 0;
+        }
+        else
+        {
+        animator.SetInteger("ComboIndex", 0);
+        comboIndex = 0;
+        isClicked = true;
         }
     }
 }
