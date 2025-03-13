@@ -4,55 +4,68 @@ public class PlayerAttack : MonoBehaviour
 {
     Animator animator;
     private int comboIndex;
+    private bool isClicked;
 
     void Start()
     {
         animator = GetComponent<Animator>();
-  
         comboIndex = 0;
+        isClicked = true;
     }
 
     void Update()
     {
-        Attack();
+        if (Input.GetMouseButtonDown(0))
+        {
+            AttackCombo();
+        }
+
     }
 
-    void Attack()
+    void AttackCombo()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+
+        if (isClicked)
         {
             comboIndex++;
         }
 
-        if (comboIndex > 20) {
-            comboIndex = 0;
-            ResetCombo();
-        }
-
-
-        if (comboIndex == 1) {
+        if (comboIndex == 1)
+        {
             animator.SetInteger("ComboIndex", 1);
         }
+
     }
 
-
-    public void Attack2()
+    public void HandleCombo()
     {
-        if (comboIndex >= 4)
+        isClicked = false;
+
+        if (animator.GetCurrentAnimatorStateInfo(1).IsName("Attack1") && comboIndex >= 2)
         {
             animator.SetInteger("ComboIndex", 2);
+            isClicked = true;
         }
-    }
-    public void Attack3()
-    {
-        if (comboIndex >= 10)
+        else if (animator.GetCurrentAnimatorStateInfo(1).IsName("Attack2") && comboIndex == 2)
+        {
+            animator.SetInteger("ComboIndex", 0);
+            isClicked = true;
+            comboIndex = 0;
+        }
+        else if (animator.GetCurrentAnimatorStateInfo(1).IsName("Attack2") && comboIndex >= 3)
         {
             animator.SetInteger("ComboIndex", 3);
+            isClicked = true;
+        } else if (animator.GetCurrentAnimatorStateInfo(1).IsName("Attack2") && comboIndex == 3) {
+            animator.SetInteger("ComboIndex", 0);
+            isClicked = true;
+            comboIndex = 0;
         }
-    }
-
-    public void ResetCombo() {
-        comboIndex = 0;
-        animator.SetInteger("ComboIndex", 0);
+        else
+        {
+            animator.SetInteger("ComboIndex", 0);
+            isClicked = true;
+            comboIndex = 0;
+        }
     }
 }
