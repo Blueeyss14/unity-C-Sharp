@@ -19,20 +19,24 @@ public class PlayerAttack : MonoBehaviour
 
     void Attack()
     {
+        if (comboIndex == 0) animator.SetInteger("ComboIndex", 0);
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             comboIndex++;
-        }
 
-        if (comboIndex > 20) {
-            comboIndex = 0;
-            ResetCombo();
+            if (comboIndex > 20)
+            {
+                comboIndex = 0;
+                ResetCombo();
+            }
         }
 
 
         if (comboIndex == 1) {
             animator.SetInteger("ComboIndex", 1);
         }
+
+
     }
 
 
