@@ -15,3 +15,6 @@
 - klik JumpScaredZone
 - assign player obj, main camera, dan camera untuk jumpscare
 - timeline scene: drag TimelineObject dari hierarchy
+
+## CameraScared
+- matikan aktif camera di inspector, cukup MainCamera aj yg aktif
