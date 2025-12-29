@@ -1,26 +1,42 @@
 using UnityEngine;
-
-public class DoorManage : MonoBehaviour
+public class RotateController : MonoBehaviour
 {
-    public Transform cube;
-    public float targetAngle;
-    public float speed;
-    private bool rotate;
+    [SerializeField] public Transform door;
+    [SerializeField] private float targetAngle; //(collider1=90) (collider2 = -90)
+    [SerializeField] private float speed; //2
 
+    private bool isOpen = false;
+    private bool isPlayerInside = false;
+    private float closedAngle = 0f;
+    private static float currentTargetAngle = 0f;
+    private void Start()
+    {
+        if (currentTargetAngle == 0f)
+            currentTargetAngle = closedAngle;
+    }
     private void Update()
     {
-        if (!rotate) return;
-
-        Quaternion targetRot = Quaternion.Euler(0, targetAngle, 0);
-        cube.rotation = Quaternion.RotateTowards(cube.rotation, targetRot, speed * Time.deltaTime);
-
-        if (Quaternion.Angle(cube.rotation, targetRot) < 0.1f)
-            rotate = false;
+        if (!isPlayerInside) return;
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            isOpen = !isOpen;
+            currentTargetAngle = isOpen ? targetAngle : closedAngle;
+        }
+        Quaternion targetRot = Quaternion.Euler(0, currentTargetAngle, 0);
+        door.rotation = Quaternion.RotateTowards(
+            door.rotation,
+            targetRot,
+            speed * Time.deltaTime * 100f
+        );
     }
-
     private void OnTriggerEnter(Collider other)
     {
         if (!other.CompareTag("Player")) return;
-        rotate = true;
+        isPlayerInside = true;
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (!other.CompareTag("Player")) return;
+        isPlayerInside = false;
     }
 }
