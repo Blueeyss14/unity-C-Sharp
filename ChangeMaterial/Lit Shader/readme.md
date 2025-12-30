@@ -1,6 +1,6 @@
 ## object & collider
-- create object (ex: cube)
-- create emptyObject (as collider) name it "color object"
+- create object (ex: cube) name it "color object"
+- create emptyObject (as collider) name it "collider"
 
 ## material
 - create material1 & material2
@@ -9,10 +9,10 @@
 - drag litShader2 into material2 (blue)
 
 ## assign
-- attach material1 to object(cube)
-- attach script to collider (color object)
-- drag color object into script(Object Render input)
-- drag material2 into script(Material input)
+- attach material1 to color object
+- attach script to collider 
+- drag color object into collider script(Object Render input)
+- drag material2 into script script(Material input)
 
 ## player
 - tag == "Player" -> collider in = blue
