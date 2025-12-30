@@ -11,6 +11,8 @@
 - in Shader Graph (Blackboard), press + (plus button)
 - create CubeColor (type color)
 - create TargetColor (type color)
+![cek](assets/single1.png)
+![cek](assets/single2.png)
 
 ### Cube Color
 - click Cube Color, in Graph Inspector click exposed (true)
@@ -20,12 +22,14 @@
 ### Target Color
 - click Cube Color, in Graph Inspector click exposed (true)
 - in graph inspector (Name: TargetColor, Reference: _TargetColor, Default: blue/whatever)
-
+![cek](assets/single3.png)
+![cek](assets/single4.png)
 
 ## assign
 - attach CubeMaterial to color object
 - attach script to collider
 - drag color object into collider script(Object Render input)
+![cek](assets/single7.png)
 
 ## Color Object
 - click Color Object, can change CubeColor
@@ -34,3 +38,5 @@
 ## player
 - tag == "Player" -> collider in = TargetColor
 - tag == "Player" -> collider out = CubeColor (originalMaterial)
+![cek](assets/single5.png)
+![cek](assets/single6.png)
