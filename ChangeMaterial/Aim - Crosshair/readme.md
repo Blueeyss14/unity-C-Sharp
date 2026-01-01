@@ -50,10 +50,10 @@ Note: this ain't border, this is just for crosshair testing
 note: "PlayerTrigger.cs" is un-attachable
 
 ## Goals
-If the player is inside the collider and not aiming, the color won’t change & cannot pick the item
-or
-If the player is outside the collider and aiming, the color won’t change & cannot pick the item
-Player -> inside collider && aiming the item ? color changed & pick Item by pressing "E" : color won’t change 
+- If the player is inside the collider and not aiming, the color won’t change & cannot pick the item
+- or
+- If the player is outside the collider and aiming, the color won’t change & cannot pick the item
+- Player -> inside collider && aiming the item ? color changed & pick Item by pressing "E" : color won’t change 
 - ![cek](assets/pick9.png)
 - ![cek](assets/pick10.png)
 - ![cek](assets/pick11.png)
